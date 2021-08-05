@@ -1,0 +1,51 @@
+# Based on github workflow
+
+# Test
+[test-all]
+all = true
+all-features = true
+run-types = ["AllTargets"]
+
+# Test with subset of features (interledger-packet)
+[interledger-packet]
+run-types = ["AllTargets"]
+packages = ["interledger-packet"]
+
+[interledger-packet--strict]
+run-types = ["AllTargets"]
+packages = ["interledger-packet"]
+features = "strict"
+
+[interledger-packet--roundtrip-only]
+run-types = ["AllTargets"]
+packages = ["interledger-packet"]
+features = "roundtrip-only"
+
+# Test with subset of features (interledger-btp)
+[interledger-btp]
+run-types = ["AllTargets"]
+packages = ["interledger-btp"]
+
+[interledger-btp--strict]
+run-types = ["AllTargets"]
+packages = ["interledger-btp"]
+features = "strict"
+
+# Test with subset of features (interledger-stream)
+[interledger-stream]
+run-types = ["AllTargets"]
+packages = ["interledger-stream"]
+
+[interledger-stream--strict]
+run-types = ["AllTargets"]
+packages = ["interledger-stream"]
+features = "strict"
+
+[interledger-stream--roundtrip-only]
+run-types = ["AllTargets"]
+packages = ["interledger-stream"]
+features = "roundtrip-only"
+
+# Cherry on the cake
+[report]
+out = ["Html"]
