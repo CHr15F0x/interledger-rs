@@ -17,42 +17,60 @@ rustup default nightly
 
 # Find where the binaries are
 # 
-# TODO or cargo test --tests like in the origina lmanual?
+# TODO or
+# cargo test --tests
+# cargo build --all-features --all-targets
 #
-TARGETS=$( \
-      for file in \
-        $( \
-          RUSTFLAGS="-Z instrument-coverage" \
-            cargo test --all --all-features --no-run --message-format=json \
-              | jq -r "select(.profile.test == true) | .filenames[]" \
-              | grep -v dSYM - \
-        ); \
-      do \
-        printf "%s %s " -object $file; \
-      done \
-    )
+# TARGETS1=$( \
+#       for file in \
+#         $( \
+#           RUSTFLAGS="-Z instrument-coverage" \
+#             cargo test --all --all-features --no-run --message-format=json \
+#               | jq -r "select(.profile.test == true) | .filenames[]" \
+#               | grep -v dSYM - \
+#         ); \
+#       do \
+#         printf "%s %s " -object $file; \
+#       done \
+#     )
 
-# debug..
-# echo ${TARGETS}
+# # debug..
+# echo "TEST ALL TARGETS\n" ${TARGETS1}
 
-# Test steps from .github/workflows/ci.yml
-# build:
-# - name: Test
-cargo test --all --all-features
-# - name: Test with subset of features (interledger-packet)
-cargo test -p interledger-packet
-cargo test -p interledger-packet --features strict
-cargo test -p interledger-packet --features roundtrip-only
-# - name: Test with subset of features (interledger-btp)
+# TARGETS2=$( \
+#       for file in \
+#         $( \
+#           RUSTFLAGS="-Z instrument-coverage" \
+#             cargo build --all-targets --all-features --message-format=json \
+#               | jq -r "select(.profile.test == true) | .filenames[]" \
+#               | grep -v dSYM - \
+#         ); \
+#       do \
+#         printf "%s %s " -object $file; \
+#       done \
+#     )
+
+# # debug..
+# echo "BUILD ALL TARGETS\n" ${TARGETS2}
+
+# # Test steps from .github/workflows/ci.yml
+# # build:
+# # - name: Test
+# cargo test --all --all-features
+# # - name: Test with subset of features (interledger-packet)
+# cargo test -p interledger-packet
+# cargo test -p interledger-packet --features strict
+# cargo test -p interledger-packet --features roundtrip-only
+# # - name: Test with subset of features (interledger-btp)
 cargo test -p interledger-btp
-cargo test -p interledger-btp --features strict
-# - name: Test with subset of features (interledger-stream)
+# cargo test -p interledger-btp --features strict
+# # - name: Test with subset of features (interledger-stream)
 cargo test -p interledger-stream
-cargo test -p interledger-stream --features strict
-cargo test -p interledger-stream --features roundtrip-only
+# cargo test -p interledger-stream --features strict
+# cargo test -p interledger-stream --features roundtrip-only
 # test-md:
 # - name: Test
-scripts/run-md-test.sh '^.*$' 1
+# scripts/run-md-test.sh '^.*$' 1
 
 # Merge all the raw data gathered
 llvm-profdata merge --sparse `find . -name "*.profraw" -printf "%p "` -o all.profdata
@@ -72,14 +90,24 @@ llvm-profdata merge --sparse `find . -name "*.profraw" -printf "%p "` -o all.pro
 #     ) \
 #     --instr-profile all.profdata --summary-only
 
-# llvm-cov report \
-#   ${TARGETS} \
-#   --instr-profile all.profdata --summary-only
-
 # llvm-cov show --format=lcov -Xdemangler=rustfilt ${TARGETS} \
 #     -instr-profile=all.profdata \
 #     -show-line-counts-or-regions \
 #     -show-instantiations > cov-report.lcov
+
+TARGETS=$( \
+      for file in \
+        $(find ./target/debug/ -executable -type "f" -path "*target/debug*" -not -name "*.*" -not -name "build*script*"); \
+      do \
+        printf "%s %s " -object $file; \
+      done \
+    )
+
+echo "TARGETS" ${TARGETS}
+
+llvm-cov report \
+  ${TARGETS} \
+  --instr-profile all.profdata --summary-only
 
 # Export it to a more universal format
 llvm-cov export --format=lcov -Xdemangler=rustfilt ${TARGETS} \
