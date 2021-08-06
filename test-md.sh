@@ -1,25 +1,21 @@
 #! /usr/bin/env bash
+#
+# Based on: https://doc.rust-lang.org/beta/unstable-book/compiler-flags/instrument-coverage.html
+#
 
-# sudo apt-get update
-# sudo apt-get install -y redis-server redis-tools libssl-dev
-# sudo npm install -g ganache-cli ilp-settlement-xrp conventional-changelog-cli
-
-# rustup toolchain install nightly
-# NO rustup component add llvm-tools-preview
-# cargo install rustfilt
-# cargo install cargo-binutils
-# sudo apt install llvm-12
-
+# Cleanup previous run
 find . -name "*.profraw" | xargs rm
 rm ./all.profdata
 
 cargo clean
 
+# LLVM cov works only with the following
 export RUSTFLAGS="-Z instrument-coverage"
 rustup default nightly
 
+# Interledger 'build' step tests
 cargo test --all --all-features
-
+# Interledger 'test-md' step tests
 scripts/run-md-test.sh '^.*$' 1
 
 llvm-profdata merge --sparse `find . -name "*.profraw" -printf "%p "` -o all.profdata
