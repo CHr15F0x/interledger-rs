@@ -8,7 +8,7 @@ sudo npm install -g ganache-cli ilp-settlement-xrp conventional-changelog-cli
 sudo apt-get install -y jq
 rustup toolchain install nightly
 cargo install rustfilt
-# Required for lcov->HTML generation
+# Required for lcov to HTML generation
 sudo apt-get install -y lcov
 
 # NOPE!! --> rustup component add llvm-tools-preview

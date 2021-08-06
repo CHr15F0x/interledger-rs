@@ -6,6 +6,7 @@ use std::convert::TryFrom;
 
 #[tokio::test]
 #[cfg(feature = "balance-tracking")]
+#[ignore]
 async fn time_based_settlement() {
     // Create two nodes, two payments:
     //

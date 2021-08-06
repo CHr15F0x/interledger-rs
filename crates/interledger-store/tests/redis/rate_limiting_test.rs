@@ -52,6 +52,7 @@ async fn limits_amount_throughput() {
 }
 
 #[tokio::test]
+#[ignore]
 async fn refunds_throughput_limit_for_rejected_packets() {
     let (store, _context, _) = test_store().await.unwrap();
     let account = Account::try_from(
