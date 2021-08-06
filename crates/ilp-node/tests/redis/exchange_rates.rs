@@ -8,7 +8,7 @@ use std::time::Duration;
 use tracing::error;
 
 #[tokio::test]
-#[ignore]
+// #[ignore]
 async fn coincap() {
     let context = TestContext::new();
 
