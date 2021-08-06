@@ -3,6 +3,9 @@
 # Taken from:
 # https://gist.github.com/junkdog/70231d6953592cd6f27def59fe19e50d
 #
+# Added:
+# llvm-profdata
+#
 function register_clang_version {
     local version=$1
     local priority=$2
@@ -22,6 +25,7 @@ function register_clang_version {
         --slave   /usr/bin/llvm-mc           llvm-mc          /usr/bin/llvm-mc-${version} \
         --slave   /usr/bin/llvm-nm           llvm-nm          /usr/bin/llvm-nm-${version} \
         --slave   /usr/bin/llvm-objdump      llvm-objdump     /usr/bin/llvm-objdump-${version} \
+        --slave   /usr/bin/llvm-profdata     llvm-profdata    /usr/bin/llvm-profdata-${version} \
         --slave   /usr/bin/llvm-ranlib       llvm-ranlib      /usr/bin/llvm-ranlib-${version} \
         --slave   /usr/bin/llvm-readobj      llvm-readobj     /usr/bin/llvm-readobj-${version} \
         --slave   /usr/bin/llvm-rtdyld       llvm-rtdyld      /usr/bin/llvm-rtdyld-${version} \
