@@ -4,10 +4,12 @@
 sudo apt-get update
 sudo apt-get install -y redis-server redis-tools libssl-dev
 sudo npm install -g ganache-cli ilp-settlement-xrp conventional-changelog-cli
-# Required for coverage (https://doc.rust-lang.org/beta/unstable-book/compiler-flags/instrument-coverage.html)
+# Required for llvm-profdata && llvm-cov (https://doc.rust-lang.org/beta/unstable-book/compiler-flags/instrument-coverage.html)
 sudo apt-get install -y jq
 rustup toolchain install nightly
 cargo install rustfilt
+# Required for lcov->HTML generation
+sudo apt-get install -y lcov
 
 # NOPE!! --> rustup component add llvm-tools-preview
 # ??? cargo install cargo-binutils
