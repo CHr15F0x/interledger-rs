@@ -5,9 +5,9 @@
 
 # Convenience variables
 PROJ=interledger
-REPORT=${PROJ}-lcov-report
+REPORT=${PROJ}-llvm-lcov-report
 # Uncomment for debug
-# DEBUG=1
+DEBUG=1
 
 # Cleanup files from previous run
 find . -name "*.profraw" | xargs rm -f
