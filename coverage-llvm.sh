@@ -4,15 +4,19 @@
 #
 
 # Convenience variables
-PROJ=interledger
-REPORT=${PROJ}-llvm-lcov-report
+REPORT=coverage-llvm-lcov
 # Uncomment for debug
-DEBUG=1
+# DEBUG=1
+
+function partial_cleanup() {
+  find . -name "*.profraw" | xargs rm -f
+  rm -f ./${PROJ}.profdata
+  rm -f ./${REPORT}.info
+}
 
 # Cleanup files from previous run
-find . -name "*.profraw" | xargs rm -f
-rm -f ./${PROJ}.profdata
-rm -f ./${REPORT}.info
+# Just in case there are leftovers
+partial_cleanup
 rm -rf ./${REPORT}
 
 # What happens next is a delicate matter, so:
@@ -22,36 +26,11 @@ cargo clean
 rustup default nightly
 export RUSTFLAGS="-Z instrument-coverage"
 # Certain test runs could overwrite each others raw prof data
-# See https://clang.llvm.org/docs/SourceBasedCodeCoverage.html#id4 for expanation of %m
-export LLVM_PROFILE_FILE="${PROJ}-%m.profraw"
+# See https://clang.llvm.org/docs/SourceBasedCodeCoverage.html#id4 for explanation of %p and %m 
+export LLVM_PROFILE_FILE="${PROJ}-%p-%m.profraw"
 
-# --TESTS BEGIN--
-#
-# Tests to run, steps taken from .github/workflows/ci.yml
-#
-# build:
-# - name: Test
-cargo test --all --all-features
-# - name: Test with subset of features (interledger-packet)
-cargo test -p interledger-packet
-cargo test -p interledger-packet --features strict
-cargo test -p interledger-packet --features roundtrip-only
-# - name: Test with subset of features (interledger-btp)
-cargo test -p interledger-btp
-cargo test -p interledger-btp --features strict
-# - name: Test with subset of features (interledger-stream)
-cargo test -p interledger-stream
-cargo test -p interledger-stream --features strict
-cargo test -p interledger-stream --features roundtrip-only
-
-echo "!!! test-md internally requires sudo, please enter your password: !!!"
-sudo -v
-
-# test-md:
-# - name: Test
-scripts/run-md-test.sh '^.*$' 1
-#
-# --TESTS END--
+# Run the tests
+source run-all-tests.sh
 
 [ ${DEBUG} ] && find . -name "*.profraw"
 
@@ -89,7 +68,12 @@ genhtml \
   --prefix $(readlink -f "${PWD}/..") \
   --show-details \
   --legend \
+  --highlight \
+  --ignore-errors source \
   ${REPORT}.info  
+
+# Partial cleanup files from this run, at least the most prolific ones
+partial_cleanup
 
 # Cleanup state
 rustup default stable

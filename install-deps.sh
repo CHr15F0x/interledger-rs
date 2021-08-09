@@ -10,9 +10,10 @@ rustup toolchain install nightly
 cargo install rustfilt
 # Required for lcov to HTML generation
 sudo apt-get install -y lcov
-
-# NOPE!! --> rustup component add llvm-tools-preview
-# ??? cargo install cargo-binutils
+# Required for gcov-lcov to HTML generation on Ubuntu 20
+sudo apt-get install -y gcc-7
+# Required for grcov
+cargo install grcov
 
 function install_llvm_12() {
     sudo apt-get update
