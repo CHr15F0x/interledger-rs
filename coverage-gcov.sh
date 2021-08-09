@@ -34,8 +34,8 @@ source run-all-tests.sh
 [ ${DEBUG} ] && find . -name "*.gcno"
 [ ${DEBUG} ] && find . -name "*.gcda"
 
-# --ignore-errors gcov,source,graph
-# version '408*', prefer 'A93*'
+# TODO: Add a note about this problem
+#
 # geninfo: WARNING: GCOV failed for /home/k/projects/interledger-rs/target/debug/deps/hyper-bfaa07ba5bd2fe8b.gcda!
 # Processing deps/openssl_sys-10dd1e75ebc1ffe8.gcda
 # /home/k/projects/interledger-rs/target/debug/deps/openssl_sys-10dd1e75ebc1ffe8.gcno:version '408*', prefer 'A93*'lcov --directory ./target/debug --capture --output-file ${REPORT}-0.info

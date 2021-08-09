@@ -1,10 +1,14 @@
 #! /usr/bin/env bash
 
+#
+# This script install deps for ALL the coverage configs, except for tarpaulin
+# Tested only on Ubuntu 18.04 & 20.04
+#
 # Required by interledger-rs
 sudo apt-get update
 sudo apt-get install -y redis-server redis-tools libssl-dev
 sudo npm install -g ganache-cli ilp-settlement-xrp conventional-changelog-cli
-# Required for llvm-profdata && llvm-cov (https://doc.rust-lang.org/beta/unstable-book/compiler-flags/instrument-coverage.html)
+# Required by llvm-profdata && llvm-cov (https://doc.rust-lang.org/beta/unstable-book/compiler-flags/instrument-coverage.html)
 sudo apt-get install -y jq
 rustup toolchain install nightly
 cargo install rustfilt
@@ -14,6 +18,8 @@ sudo apt-get install -y lcov
 sudo apt-get install -y gcc-7
 # Required for grcov
 cargo install grcov
+# Required for grcov, must be installed after the correct version of LLVM is in the system
+rustup component add llvm-tools-preview --toolchain nightly
 
 function install_llvm_12() {
     sudo apt-get update
