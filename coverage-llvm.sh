@@ -5,6 +5,7 @@
 
 # Convenience variables
 REPORT=coverage-llvm-lcov
+PROJ=interledger
 # Uncomment for debug
 # DEBUG=1
 
