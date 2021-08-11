@@ -5,13 +5,9 @@
 
 # Convenience variables
 REPORT=coverage-llvm-grcov
-PROJ=interledger
-# Uncomment for debug
-# DEBUG=1
 
 function partial_cleanup() {
   find . -name "*.profraw" | xargs rm -f
-  rm -f ./${PROJ}.profdata
   rm -f ./${REPORT}.info
   rm -f ./${REPORT}-lcov.info
 }
@@ -29,18 +25,16 @@ rustup default nightly
 export RUSTFLAGS="-Z instrument-coverage"
 # Certain test runs could overwrite each others raw prof data
 # See https://clang.llvm.org/docs/SourceBasedCodeCoverage.html#id4 for explanation of %p and %m 
-export LLVM_PROFILE_FILE="${PROJ}-%p-%m.profraw"
+export LLVM_PROFILE_FILE="cov-%p-%m.profraw"
 
 # Run the tests
 source run-all-tests.sh
 
-[ ${DEBUG} ] && find . -name "*.profraw"
-
 # Use grcov's html generation capability
-grcov . -s . --binary-path ./target/debug/ --llvm -t html --branch --ignore-not-existing --ignore '*/rustc*' --ignore '*/.cargo/registry*' -o ./${REPORT}
+grcov . -s . --binary-path ./target/debug/ --llvm -t html --ignore-not-existing --ignore '*/rustc*' --ignore '*/.cargo/registry*' -o ./${REPORT}
 
 # Use lcov's genhtml
-grcov . -s . --binary-path ./target/debug/ --llvm -t lcov --branch --ignore-not-existing --ignore '*/rustc*' --ignore '*/.cargo/registry*' -o ./${REPORT}-lcov.info
+grcov . -s . --binary-path ./target/debug/ --llvm -t lcov --ignore-not-existing --ignore '*/rustc*' --ignore '*/.cargo/registry*' -o ./${REPORT}-lcov.info
 
 # Produce a report in HTML format
 genhtml \

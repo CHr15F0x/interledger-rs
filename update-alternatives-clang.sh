@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 
-# Taken from:
+# Based on:
 # https://gist.github.com/junkdog/70231d6953592cd6f27def59fe19e50d
 #
 # Added:

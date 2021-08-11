@@ -4,9 +4,7 @@
 #
 
 # Convenience variables
-REPORT=coverage-gcc-lcov
-# Uncomment for debug
-# DEBUG=1
+REPORT=coverage-gcov-lcov
 
 function partial_cleanup() {
   find . -name "*.gcno" | xargs rm -f
@@ -30,18 +28,6 @@ export RUSTDOCFLAGS="-Cpanic=abort"
 
 # Run the tests 
 source run-all-tests.sh
-
-[ ${DEBUG} ] && find . -name "*.gcno"
-[ ${DEBUG} ] && find . -name "*.gcda"
-
-# TODO: Add a note about this problem
-#
-# geninfo: WARNING: GCOV failed for /home/k/projects/interledger-rs/target/debug/deps/hyper-bfaa07ba5bd2fe8b.gcda!
-# Processing deps/openssl_sys-10dd1e75ebc1ffe8.gcda
-# /home/k/projects/interledger-rs/target/debug/deps/openssl_sys-10dd1e75ebc1ffe8.gcno:version '408*', prefer 'A93*'lcov --directory ./target/debug --capture --output-file ${REPORT}-0.info
-#
-# sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 1 
-# sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 1 
 
 lcov --directory ./target/debug --capture --output-file ${REPORT}-0.info
 
