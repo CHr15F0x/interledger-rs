@@ -21,7 +21,6 @@ rm -rf ./${REPORT}
 cargo clean
 
 # LLVM cov works only with the following
-rustup default nightly
 export RUSTFLAGS="-Z instrument-coverage"
 # Certain test runs could overwrite each others raw prof data
 # See https://clang.llvm.org/docs/SourceBasedCodeCoverage.html#id4 for explanation of %p and %m 
@@ -53,6 +52,5 @@ genhtml \
 partial_cleanup
 
 # Cleanup state
-rustup default stable
 unset RUSTFLAGS
 unset LLVM_PROFILE_FILE

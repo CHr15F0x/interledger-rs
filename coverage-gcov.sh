@@ -21,7 +21,6 @@ rm -rf ./${REPORT}
 cargo clean
 
 # Required to use the gcov format (*.gcno, *.gcda)
-rustup default nightly
 export CARGO_INCREMENTAL=0
 export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort"
 export RUSTDOCFLAGS="-Cpanic=abort"
@@ -31,7 +30,7 @@ source run-all-tests.sh
 
 lcov --directory ./target/debug --capture --output-file ${REPORT}-0.info
 
-lcov --extract ${REPORT}-0.info "*interledger-rs*" -o ${REPORT}-1.info
+lcov --extract ${REPORT}-0.info "*$(basename ${PWD})*" -o ${REPORT}-1.info
 
 # Produce a report in HTML format
 genhtml \
@@ -50,7 +49,6 @@ genhtml \
 partial_cleanup
 
 # Cleanup state
-rustup default stable
 unset CARGO_INCREMENTAL
 unset RUSTFLAGS
 unset RUSTDOCFLAGS
